@@ -43,6 +43,9 @@
   <body>
     <h1>Appointment with Emilia</h1>
     <div class="calendar-container">
+      <label for="name">Your Name:</label>
+      <input type="text" id="name" placeholder="Enter your name" />
+      <br />
       <label for="date">Select a Date:</label>
       <input type="date" id="date" />
       <br />
@@ -87,16 +90,21 @@
       });
 
       function bookAppointment() {
+        let name = document.getElementById("name").value;
         let date = document.getElementById("date").value;
         let time = document.getElementById("time").value;
-        if (date && time) {
-          alert(`Your appointment with Emilia is set for ${date} at ${time}.`);
+
+        if (name && date && time) {
+          alert(
+            `Your appointment with Emilia is set for ${date} at ${time}, booked by ${name}.`
+          );
 
           // Send Email Notification to Your Gmail
           emailjs
             .send("service_g1vr49h", "template_m83ad03", {
               to_email: "emilia.lejbman@gmail.com",
-              message: `New appointment scheduled for ${date} at ${time}.`,
+              from_name: name,
+              message: `New appointment scheduled for ${date} at ${time} by ${name}.`,
               date: date,
               time: time,
             })
@@ -113,7 +121,7 @@
               }
             );
         } else {
-          alert("Please select a date and time.");
+          alert("Please enter your name, select a date, and time.");
         }
       }
     </script>
