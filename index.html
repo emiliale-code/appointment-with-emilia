@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Appointment with Emilia</title>
+    <style>
+      body {
+        background-color: black;
+        color: gold;
+        font-family: Arial, sans-serif;
+        text-align: center;
+        padding: 50px;
+      }
+      h1 {
+        font-size: 36px;
+        margin-bottom: 20px;
+      }
+      .calendar-container {
+        background-color: #222;
+        padding: 20px;
+        border-radius: 10px;
+        display: inline-block;
+      }
+      input,
+      select,
+      button {
+        margin: 10px;
+        padding: 10px;
+        font-size: 16px;
+        border: 1px solid gold;
+        background-color: black;
+        color: gold;
+        border-radius: 5px;
+      }
+      button:hover {
+        background-color: gold;
+        color: black;
+        cursor: pointer;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Appointment with Emilia</h1>
+    <div class="calendar-container">
+      <label for="date">Select a Date:</label>
+      <input type="date" id="date" />
+      <br />
+      <label for="time">Select a Time Slot:</label>
+      <select id="time">
+        <option value="09:00">09:00 AM</option>
+        <option value="10:00">10:00 AM</option>
+        <option value="11:00">11:00 AM</option>
+        <option value="12:00">12:00 PM</option>
+        <option value="13:00">01:00 PM</option>
+        <option value="14:00">02:00 PM</option>
+        <option value="15:00">03:00 PM</option>
+        <option value="16:00">04:00 PM</option>
+        <option value="17:00">05:00 PM</option>
+        <option value="18:00">06:00 PM</option>
+        <option value="19:00">07:00 PM</option>
+        <option value="20:00">08:00 PM</option>
+      </select>
+      <br />
+      <button onclick="bookAppointment()">Book Appointment</button>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        emailjs.init("sBOk196B59LsHIyHt"); // Updated with your actual EmailJS Public Key
+      });
+
+      document.getElementById("date").addEventListener("input", function () {
+        let selectedDate = new Date(this.value);
+        let blockedDates = [
+          new Date("2025-02-01").toDateString(), // Blocked Saturday
+          new Date("2025-02-02").toDateString(), // Blocked Sunday
+        ];
+
+        if (blockedDates.includes(selectedDate.toDateString())) {
+          alert(
+            "Appointments are not available on February 1st and 2nd, 2025. Please select another date."
+          );
+          this.value = ""; // Clear the selected date
+        }
+      });
+
+      function bookAppointment() {
+        let date = document.getElementById("date").value;
+        let time = document.getElementById("time").value;
+        if (date && time) {
+          alert(`Your appointment with Emilia is set for ${date} at ${time}.`);
+
+          // Send Email Notification to Your Gmail
+          emailjs
+            .send("service_g1vr49h", "template_m83ad03", {
+              to_email: "emilia.lejbman@gmail.com",
+              message: `New appointment scheduled for ${date} at ${time}.`,
+              date: date,
+              time: time,
+            })
+            .then(
+              function (response) {
+                console.log("SUCCESS!", response.status, response.text);
+                alert("Confirmation email sent to Emilia.");
+              },
+              function (error) {
+                console.log("FAILED...", error);
+                alert(
+                  "Failed to send email notification. Check console for details."
+                );
+              }
+            );
+        } else {
+          alert("Please select a date and time.");
+        }
+      }
+    </script>
+  </body>
+</html>
